@@ -1,0 +1,3 @@
+<div class="app" *ngIf="state === 'ask'">{{left}} + {{right}} = {{input ? input : '?'}} </div>
+<div class="app" *ngIf="state === 'correct'">Correct!</div>
+<div class="app" *ngIf="state === 'incorrect'">Try again...</div>
