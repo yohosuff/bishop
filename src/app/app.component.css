@@ -4,4 +4,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.progress-container {
+    display: flex;
+    width: calc(var(--block-size) * var(--question-count) + calc(10px * (var(--question-count) - 1)));
+    justify-content: space-between;
+}
+
+.progress-block {
+    border: 1px solid white;
+    width: var(--block-size);
+    height: var(--block-size);
+}
+
+.divider {
+    height: 100px;
 }

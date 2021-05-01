@@ -1,3 +1,12 @@
-<div class="app" *ngIf="state === 'ask'">{{left}} + {{right}} = {{input ? input : '?'}} </div>
-<div class="app" *ngIf="state === 'correct'">Correct!</div>
-<div class="app" *ngIf="state === 'incorrect'">Try again...</div>
+<div class="app">
+    <div class="progress-container">
+        <div class="progress-block" *ngFor="let answer of answers" [style.backgroundColor]="answer ? 'white' : 'black'"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div *ngIf="state === 'ask'">{{left}} + {{right}} = {{input ? input : '?'}} </div>
+    <div *ngIf="state === 'correct'">Correct!</div>
+    <div *ngIf="state === 'incorrect'">Try again...</div>
+    <div *ngIf="state === 'win'">You win! Press any key to play again.</div>
+</div>
