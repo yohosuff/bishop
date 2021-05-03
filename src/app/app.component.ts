@@ -8,21 +8,27 @@ import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   
   state;
-  input;
   left;
   right;
+  choices;
   answers;
   answerIndex;
 
   blockSize = 100;
   questionCount = 5;
+  inputMap = {
+    'j': 0,
+    'k': 1,
+    'l': 2,
+    ';': 3,
+  };
 
   constructor(private host: ElementRef) {
     this.host.nativeElement.style.setProperty('--block-size', `${this.blockSize}px`);
     this.host.nativeElement.style.setProperty('--question-count', `${this.questionCount}`);
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.createNewGame();
   }
 
@@ -34,12 +40,17 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    if(event.key !== 'Enter') {
-      this.input += event.key;
+    if(this.state !== 'ask') {
       return;
     }
 
-    if('' + (this.left + this.right) === this.input) {
+    if(!['j','k','l',';'].includes(event.key)) {
+      return;
+    }
+    
+    const input = this.choices[this.inputMap[event.key]];
+    
+    if(this.left + this.right === input) {
       this.answers[this.answerIndex] = true;
       this.answerIndex += 1;
     
@@ -47,7 +58,7 @@ export class AppComponent implements OnInit {
         this.state = 'win';
       } else {
         this.state = 'correct';
-        setTimeout(() => this.reset(), 1000);
+        setTimeout(() => this.createNewQuestion(), 500);
       }
 
     } else {
@@ -55,7 +66,6 @@ export class AppComponent implements OnInit {
 
       setTimeout(() => {
         this.state = 'ask';
-        this.input = '';
       }, 1000);
     }
   }
@@ -68,14 +78,52 @@ export class AppComponent implements OnInit {
     }
 
     this.answerIndex = 0;
-    this.reset();
+    this.createNewQuestion();
   }
 
-  reset() {
+  createNewQuestion() {
     this.state = 'ask';
-    this.input = '';
     this.left = this.getNumber();
     this.right = this.getNumber();
+    this.choices = this.getChoices(this.left + this.right);
+  }
+
+  getChoices(answer) {
+    const choices = [answer];
+    
+    for(let i = 0; i < 3; ++i) {
+      let decoy = answer;
+
+      while(choices.includes(decoy)) {
+        decoy = this.getDecoy(answer);
+      }
+
+      choices.push(decoy);
+    }
+
+    this.shuffle(choices);
+
+    return choices;
+  }
+
+  shuffle(list) {
+    for(let i = 0; i < 20; ++i) {
+      const a = Math.floor(Math.random() * list.length);
+      const b = Math.floor(Math.random() * list.length);
+      const temp = list[a];
+      list[a] = list[b];
+      list[b] = temp;
+    }
+  }
+
+  getDecoy(answer) {
+    let offset = 1 + Math.floor(Math.random() * 5);
+    
+    if(Math.random() > 0.5) {
+      offset *= -1;
+    }
+
+    return answer + offset;
   }
 
   getNumber() {

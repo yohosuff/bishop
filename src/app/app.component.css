@@ -9,8 +9,8 @@
 
 .progress-container {
     display: flex;
-    width: calc(var(--block-size) * var(--question-count) + calc(10px * (var(--question-count) - 1)));
     justify-content: space-between;
+    width: calc(var(--block-size) * var(--question-count) + calc(10px * (var(--question-count) - 1)));
 }
 
 .progress-block {
@@ -21,4 +21,21 @@
 
 .divider {
     height: 100px;
+}
+
+.choices-container {
+    display: flex;
+    justify-content: space-between;
+    width: 700px;
+}
+
+.choice {
+    border: 1px solid white;
+    width: 150px;
+    text-align: center;
+}
+
+.choice-footer {
+    font-size: small;
+    text-align: center;
 }
