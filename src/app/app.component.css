@@ -29,14 +29,31 @@
     width: 700px;
 }
 
-.choice {
+.button {
     border: 1px solid white;
-    width: 150px;
     text-align: center;
     cursor: pointer;
 }
 
-.choice-footer {
+.button:hover {
+    background-color: white;
+    color: black;
+}
+
+.choice-button {
+    width: 150px;
+}
+
+.new-game-button {
+    width: 300px;
+    font-size: 40px;
+}
+
+.footer {
     font-size: small;
     text-align: center;
+}
+
+.height-133 {
+    height: 133px;
 }

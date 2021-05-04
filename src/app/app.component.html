@@ -4,24 +4,25 @@
     </div>
 
     <div class="divider"></div>
-
-    <div style="height: 150px;">
-        <div *ngIf="state === 'ask'">{{left}} + {{right}} = ? </div>
-        <div *ngIf="state === 'correct'">Correct!</div>
-        <div *ngIf="state === 'incorrect'">Try again...</div>
-        <div *ngIf="state === 'win'">
-            <div>You win!</div>
-            <div style="font-size:medium; text-align: center;">Press any key to play again.</div>
-        </div>
-    </div>
-
+    
+    <div *ngIf="state === 'ask'">{{left}} + {{right}} = ? </div>
+    <div *ngIf="state === 'correct'">Correct!</div>
+    <div *ngIf="state === 'incorrect'">Try again...</div>
+    <div *ngIf="state === 'win'"> You win! </div>
+    
     <div class="divider"></div>
 
-    <div class="choices-container">
-        <div *ngFor="let choice of choices">
-            <div class="choice" (click)="choose(choice)">{{choice.value}}</div>
-            <div class="choice-footer">{{choice.key}}</div>
+    <div class="height-133">
+        <div *ngIf="state === 'ask'" class="choices-container">
+            <div *ngFor="let choice of choices">
+                <div class="button choice-button" (click)="choose(choice)">{{choice.value}}</div>
+                <div class="footer">{{choice.key}}</div>
+            </div>
+        </div>
+    
+        <div *ngIf="state === 'win'">
+            <div class="button new-game-button" (click)="createNewGame()">Start New Game</div>
+            <div class="footer">any key</div>
         </div>
     </div>
-
 </div>
