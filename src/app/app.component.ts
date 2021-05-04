@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
       return;
     }
     
-    const input = this.choices[this.inputMap[event.key]];
+    const input = this.choices[this.inputMap[event.key]].value;
     
     if(this.left + this.right === input) {
       this.answers[this.answerIndex] = true;
@@ -89,19 +89,29 @@ export class AppComponent implements OnInit {
   }
 
   getChoices(answer) {
-    const choices = [answer];
+    const values = [answer];
     
     for(let i = 0; i < 3; ++i) {
       let decoy = answer;
 
-      while(choices.includes(decoy)) {
+      while(values.includes(decoy)) {
         decoy = this.getDecoy(answer);
       }
 
-      choices.push(decoy);
+      values.push(decoy);
     }
 
-    this.shuffle(choices);
+    this.shuffle(values);
+
+    const choices = values.map(value => {
+      let choice: IChoice = {value};
+      return choice;
+    });
+
+    choices[0].key = 'j';
+    choices[1].key = 'k';
+    choices[2].key = 'l';
+    choices[3].key = ';';
 
     return choices;
   }
@@ -129,4 +139,9 @@ export class AppComponent implements OnInit {
   getNumber() {
     return Math.floor(Math.random() * 10);
   }
+}
+
+interface IChoice {
+  value: number;
+  key?: string;
 }
