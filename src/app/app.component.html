@@ -19,7 +19,7 @@
 
     <div class="choices-container">
         <div *ngFor="let choice of choices">
-            <div class="choice">{{choice.value}}</div>
+            <div class="choice" (click)="choose(choice)">{{choice.value}}</div>
             <div class="choice-footer">{{choice.key}}</div>
         </div>
     </div>

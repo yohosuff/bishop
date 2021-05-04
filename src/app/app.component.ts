@@ -32,6 +32,10 @@ export class AppComponent implements OnInit {
     this.createNewGame();
   }
 
+  choose(choice) {
+    this.processInput(choice.value);
+  }
+
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
 
@@ -50,6 +54,10 @@ export class AppComponent implements OnInit {
     
     const input = this.choices[this.inputMap[event.key]].value;
     
+    this.processInput(input);
+  }
+
+  processInput(input) {
     if(this.left + this.right === input) {
       this.answers[this.answerIndex] = true;
       this.answerIndex += 1;
