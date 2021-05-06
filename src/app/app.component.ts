@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Howl } from 'howler';
 
 @Component({
   selector: 'app-root',
@@ -23,12 +24,21 @@ export class AppComponent implements OnInit {
     ';': 3,
   };
 
+  correctSound: Howl;
+  tryAgainSound: Howl;
+  youWinSound: Howl;
+  newGameSound: Howl;
+
   constructor(private host: ElementRef) {
     this.host.nativeElement.style.setProperty('--block-size', `${this.blockSize}px`);
     this.host.nativeElement.style.setProperty('--question-count', `${this.questionCount}`);
   }
 
   ngOnInit() {
+    this.correctSound = new Howl({ src: ['/assets/correct.flac'] });
+    this.tryAgainSound = new Howl({ src: ['/assets/tryAgain.flac'] });
+    this.youWinSound = new Howl({ src: ['/assets/youWin.flac'] });
+    this.newGameSound = new Howl({ src: ['/assets/newGame.flac'] });
     this.createNewGame();
   }
 
@@ -64,21 +74,22 @@ export class AppComponent implements OnInit {
     
       if(this.answerIndex === this.answers.length) {
         this.state = 'win';
+        this.youWinSound.play();
       } else {
         this.state = 'correct';
+        this.correctSound.play();
         setTimeout(() => this.createNewQuestion(), 500);
       }
 
     } else {
       this.state = 'incorrect';
-
-      setTimeout(() => {
-        this.state = 'ask';
-      }, 1000);
+      this.tryAgainSound.play();
+      setTimeout(() => this.state = 'ask', 1000);
     }
   }
 
   createNewGame() {
+    this.newGameSound.play();
     this.answers = [];
     
     for(let i = 0; i < this.questionCount; ++i) {
