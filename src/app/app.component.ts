@@ -24,8 +24,8 @@ export class AppComponent implements OnInit {
     ';': 3,
   };
 
-  correctSound: Howl;
-  tryAgainSound: Howl;
+  yepSound: Howl;
+  nopeSound: Howl;
   youWinSound: Howl;
   newGameSound: Howl;
 
@@ -35,8 +35,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.correctSound = new Howl({ src: ['/assets/correct.flac'] });
-    this.tryAgainSound = new Howl({ src: ['/assets/tryAgain.flac'] });
+    this.yepSound = new Howl({ src: ['/assets/yep.flac'] });
+    this.nopeSound = new Howl({ src: ['/assets/nope.flac'] });
     this.youWinSound = new Howl({ src: ['/assets/youWin.flac'] });
     this.newGameSound = new Howl({ src: ['/assets/newGame.flac'] });
     this.createNewGame();
@@ -77,13 +77,13 @@ export class AppComponent implements OnInit {
         this.youWinSound.play();
       } else {
         this.state = 'correct';
-        this.correctSound.play();
+        this.yepSound.play();
         setTimeout(() => this.createNewQuestion(), 500);
       }
 
     } else {
       this.state = 'incorrect';
-      this.tryAgainSound.play();
+      this.nopeSound.play();
       setTimeout(() => this.state = 'ask', 1000);
     }
   }
