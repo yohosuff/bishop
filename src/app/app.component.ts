@@ -12,11 +12,12 @@ export class AppComponent implements OnInit {
   left;
   right;
   choices;
-  answers;
-  answerIndex;
+  score;
+  scoreInterval;
 
   blockSize = 100;
   questionCount = 5;
+
   inputMap = {
     'j': 0,
     'k': 1,
@@ -29,10 +30,7 @@ export class AppComponent implements OnInit {
   youWinSound: Howl;
   newGameSound: Howl;
 
-  constructor(private host: ElementRef) {
-    this.host.nativeElement.style.setProperty('--block-size', `${this.blockSize}px`);
-    this.host.nativeElement.style.setProperty('--question-count', `${this.questionCount}`);
-  }
+  constructor(private host: ElementRef) {}
 
   ngOnInit() {
     this.yepSound = new Howl({ src: ['/assets/yep.flac'] });
@@ -68,35 +66,37 @@ export class AppComponent implements OnInit {
   }
 
   processInput(input) {
-    if(this.left + this.right === input) {
-      this.answers[this.answerIndex] = true;
-      this.answerIndex += 1;
-    
-      if(this.answerIndex === this.answers.length) {
+    const correct = this.left + this.right === input;
+
+    if(correct) {
+      this.setScore(this.score + 20);
+
+      if(this.score === 100) {
         this.state = 'win';
+        clearInterval(this.scoreInterval);
         this.youWinSound.play();
       } else {
         this.state = 'correct';
         this.yepSound.play();
         setTimeout(() => this.createNewQuestion(), 500);
       }
-
     } else {
+      this.setScore(this.score - 10);
       this.state = 'incorrect';
       this.nopeSound.play();
-      setTimeout(() => this.state = 'ask', 1000);
+      setTimeout(() => this.state = 'ask', 500);
     }
+  }
+
+  setScore(score) {
+    this.score = Math.min(Math.max(score, 0), 100);
+    this.host.nativeElement.style.setProperty('--score', `${this.score}%`);
   }
 
   createNewGame() {
     this.newGameSound.play();
-    this.answers = [];
-    
-    for(let i = 0; i < this.questionCount; ++i) {
-      this.answers.push(undefined);
-    }
-
-    this.answerIndex = 0;
+    this.setScore(0);
+    this.scoreInterval = setInterval(() => this.setScore(this.score - 1), 100);
     this.createNewQuestion();
   }
 
