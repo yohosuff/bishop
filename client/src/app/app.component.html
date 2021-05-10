@@ -1,29 +1,11 @@
 <div class="app">
-    
-    <div class="score-container">
-        <div class="score"></div>
-    </div>
-
+    <div>{{situation?.question?.text}}</div>
     <div class="divider"></div>
-    
-    <div *ngIf="state === 'ask'">{{left}} + {{right}}</div>
-    <div *ngIf="state === 'correct'">Correct!</div>
-    <div *ngIf="state === 'incorrect'">Try again...</div>
-    <div *ngIf="state === 'win'"> You win! </div>
-    
-    <div class="divider"></div>
-
     <div class="height-133">
-        <div *ngIf="state === 'ask'" class="choices-container">
-            <div *ngFor="let choice of choices">
-                <div class="button choice-button" (click)="choose(choice)">{{choice.value}}</div>
-                <div class="footer">{{choice.key}}</div>
+        <div class="choices-container">
+            <div *ngFor="let choice of situation?.question?.choices">
+                <div class="button choice-button" (click)="choose(choice)">{{choice}}</div>
             </div>
-        </div>
-    
-        <div *ngIf="state === 'win'">
-            <div class="button new-game-button" (click)="createNewGame()">Start New Game</div>
-            <div class="footer">any key</div>
         </div>
     </div>
 </div>
