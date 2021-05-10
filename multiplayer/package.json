@@ -1,0 +1,9 @@
+{
+    "name": "bishop",
+    "version": "0.0.1",
+    "description": "a math game",
+    "dependencies": {
+        "express": "4",
+        "socket.io": "^4.0.2"
+    }
+}
