@@ -1,5 +1,6 @@
 {
     "name": "bishop",
+    "type": "module",
     "version": "0.0.1",
     "description": "a math game",
     "dependencies": {

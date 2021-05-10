@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Howl } from 'howler';
+import { io, Socket } from 'socket.io-client';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,8 @@ export class AppComponent implements OnInit {
   youWinSound: Howl;
   newGameSound: Howl;
 
+  socket: Socket;
+
   constructor(private host: ElementRef) {}
 
   ngOnInit() {
@@ -38,6 +41,7 @@ export class AppComponent implements OnInit {
     this.youWinSound = new Howl({ src: ['/assets/youWin.flac'] });
     this.newGameSound = new Howl({ src: ['/assets/newGame.flac'] });
     this.createNewGame();
+    this.socket = io('http://localhost:3000');
   }
 
   choose(choice) {
