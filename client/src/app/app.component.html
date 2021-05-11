@@ -1,11 +1,26 @@
 <div class="app">
-    <div>{{situation?.question?.text}}</div>
-    <div class="divider"></div>
-    <div class="height-133">
-        <div class="choices-container">
-            <div *ngFor="let choice of situation?.question?.choices">
-                <div class="button choice-button" (click)="choose(choice)">{{choice}}</div>
+    <div>
+        <div *ngFor="let player of playersIterable" class="player-score">
+            <div class="score-container">
+                <div class="score" [style.width]="(player.position / questionCount * 100)+'%'"></div>
             </div>
+            <span class="name">{{player.name}} <span *ngIf="player === me"> (you)</span></span>
         </div>
     </div>
+
+    <div class="divider"></div>
+
+    <div *ngIf="state === 'play'">{{question?.text}}</div>
+    <div *ngIf="state === 'win'">You won!</div>
+    <div *ngIf="state === 'lose'">You lost...</div>
+
+    <div class="divider"></div>
+    
+    <div class="choices-container" *ngIf="state === 'play'">
+        <div *ngFor="let choice of question?.choices">
+            <div class="button choice-button" (click)="choose(choice)">{{choice}}</div>
+        </div>
+    </div>
+    <div class="button play-again-button" *ngIf="state !== 'play'" (click)="play()"> Play </div>
+    
 </div>

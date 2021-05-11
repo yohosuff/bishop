@@ -40,3 +40,29 @@
 .height-133 {
     height: 133px;
 }
+
+.score-container {
+    border: 1px solid white;
+    width: 500px;
+    height: 50px;
+}
+
+.score {
+    background-color: white;
+    height: 50px;
+}
+
+.play-again-button {
+    padding: 0 20px;
+}
+
+.name {
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.player-score {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}

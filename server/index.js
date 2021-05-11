@@ -14,8 +14,22 @@ const io = new Server(httpServer, {
 
 ///////////////////////////////////
 
+const names = [
+  'Bishop',
+  'Desai',
+  'Adams',
+  'Kong',
+  'Skippy',
+  'Simms',
+  'Perkins',
+  'Dandurff',
+];
+
 let questions;
+let state = 'wait';
+
 const players = {};
+const sockets = {};
 
 function generateQuestions() {
   questions = [
@@ -25,38 +39,99 @@ function generateQuestions() {
   ]
 }
 
+function retrieveName() {
+  if (names.length === 0) { return; }
+  const index = Math.floor(Math.random() * names.length);
+  const name = names[index];
+  names.splice(index, 1);
+  return name;
+}
+
+function restoreName(name) {
+  names.push(name);
+}
+
 generateQuestions();
 
 io.on('connection', socket => {
   
   const player = {
-    socket,
+    name: retrieveName(),
+    id: socket.id,
     position: 0,
   };
   
   players[socket.id] = player;
+  sockets[socket.id] = socket;
   
   socket.on('disconnect', () => {
+    const player = players[socket.id];
     delete players[socket.id];
+    restoreName(player.name);
+    socket.broadcast.emit('left', {
+      player
+    });
   });
 
-  socket.on('choice submission', choice => {
+  socket.on('choice', choice => {
     const question = questions[player.position];
+
     if(choice === question.answer) {
       player.position += 1;
-      socket.emit('correct', {
-        question: questions[player.position],
-        position: player.position,
-      });
+
+      if(player.position === questions.length) {
+        state = 'wait';
+        socket.emit('winner', {
+          position: player.position,
+        });
+        socket.broadcast.emit('loser', {
+          winner: player,
+          players,
+        });
+      } else {
+        socket.emit('correct', {
+          question: questions[player.position],
+          position: player.position,
+        });
+        socket.broadcast.emit('update', {
+          player
+        });
+      }
+
     } else {
       socket.emit('wrong');
     }
   });
 
-  socket.emit('situation update', { 
-    question: questions[player.position],
-    position: player.position,
-    questionCount: questions.length,
+  socket.on('play', () => {
+
+    if(state === 'wait') {
+      state = 'play';
+      generateQuestions();
+      
+      Object.values(players).forEach(player => {
+        player.position = 0;
+      });
+
+      Object.values(players).forEach(player => {
+        sockets[player.id].emit('welcome', {
+          id: player.id,
+          players,
+          question: questions[player.position],
+          questionCount: questions.length,
+        });
+      });
+    } else if(state === 'play') {
+      socket.emit('welcome', {
+        id: player.id,
+        players,
+        question: questions[player.position],
+        questionCount: questions.length,
+      });
+      socket.broadcast.emit('joined', {
+        player
+      });
+    }
   });
 });
 
