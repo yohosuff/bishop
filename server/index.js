@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import express from 'express';
+import { shuffle } from './helpers.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -62,16 +63,6 @@ function getChoices(answer) {
   shuffle(choices);
 
   return choices;
-}
-
-function shuffle(list) {
-  for(let i = 0; i < 20; ++i) {
-    const a = Math.floor(Math.random() * list.length);
-    const b = Math.floor(Math.random() * list.length);
-    const temp = list[a];
-    list[a] = list[b];
-    list[b] = temp;
-  }
 }
 
 function getDecoy(answer) {
