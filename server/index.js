@@ -12,8 +12,6 @@ const io = new Server(httpServer, {
   }
 });
 
-///////////////////////////////////
-
 const names = [
   'Bishop',
   'Desai',
@@ -182,12 +180,9 @@ io.on('connection', socket => {
   });
 });
 
-//////////////////////////////////////////////////////
+const port = 3000;
+const host = '0.0.0.0';
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
-httpServer.listen(3000, '0.0.0.0', () => {
-  console.log('listening on *:3000');
+httpServer.listen(port, host, () => {
+  console.log(`listening on ${host}:${port}`);
 });
