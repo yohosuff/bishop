@@ -7,7 +7,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost',
+    origin: 'http://68.148.134.87',
     methods: ['GET', 'POST']
   }
 });
@@ -188,6 +188,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-httpServer.listen(3000, () => {
+httpServer.listen(3000, '0.0.0.0', () => {
   console.log('listening on *:3000');
 });

@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
 
   play() {
     if(!this.socket) {
-      this.socket = io('http://localhost:3000');
+      this.socket = io('http://68.148.134.87:3000');
     
       this.socket.on('welcome', params => {
         console.log('welcome', params);
