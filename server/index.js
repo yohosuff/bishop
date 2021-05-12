@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import express from 'express';
-import { shuffle } from './helpers.js';
+import { NameProvider, QuestionGenerator } from './helpers.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -13,86 +13,17 @@ const io = new Server(httpServer, {
   }
 });
 
-const names = [
-  'Bishop',
-  'Desai',
-  'Adams',
-  'Kong',
-  'Skippy',
-  'Simms',
-  'Perkins',
-  'Dandurff',
-];
-
 let questions;
 let state = 'wait';
-
 const players = {};
 const sockets = {};
-
-function generateQuestions() {
-  
-  questions = [];
-
-  const operators = ['+','-'];
-
-  for(let i = 0; i < 10; ++i) {
-    const left = Math.floor(Math.random() * 10);
-    const right = Math.floor(Math.random() * 10);
-    const operator = operators[Math.floor(Math.random() * operators.length)];
-    const text = `${left} ${operator} ${right}`;
-    const answer = eval(text);
-    const choices = getChoices(answer);
-    questions.push({text, answer, choices});
-  }
-}
-
-function getChoices(answer) {
-  const choices = [answer];
-   
-  for(let i = 0; i < 3; ++i) {
-    let decoy = answer;
-
-    while(choices.includes(decoy)) {
-      decoy = getDecoy(answer);
-    }
-
-    choices.push(decoy);
-  }
-
-  shuffle(choices);
-
-  return choices;
-}
-
-function getDecoy(answer) {
-  let offset = 1 + Math.floor(Math.random() * 5);
-   
-  if(Math.random() > 0.5) {
-    offset *= -1;
-  }
-
-  return answer + offset;
-}
-
-function retrieveName() {
-  if (names.length === 0) { return; }
-  const index = Math.floor(Math.random() * names.length);
-  const name = names[index];
-  names.splice(index, 1);
-  return name;
-}
-
-function restoreName(name) {
-  names.push(name);
-}
-
-generateQuestions();
+const nameProvider = new NameProvider();
+const questionGenerator = new QuestionGenerator();
 
 io.on('connection', socket => {
   
   const player = {
-    name: retrieveName(),
+    name: nameProvider.retrieveName(),
     id: socket.id,
     position: 0,
   };
@@ -103,7 +34,7 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     const player = players[socket.id];
     delete players[socket.id];
-    restoreName(player.name);
+    nameProvider.restoreName(player.name);
     socket.broadcast.emit('left', {
       player
     });
@@ -143,7 +74,7 @@ io.on('connection', socket => {
 
     if(state === 'wait') {
       state = 'play';
-      generateQuestions();
+      questions = questionGenerator.generateQuestions();
       
       Object.values(players).forEach(player => {
         player.position = 0;
