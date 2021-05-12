@@ -32,11 +32,58 @@ const players = {};
 const sockets = {};
 
 function generateQuestions() {
-  questions = [
-    { text: '3 + 3', answer: 6, choices: [3, 6, 2, 1] },
-    { text: '1 + 8', answer: 9, choices: [2, 3, 9, 0] },
-    { text: '1 + 1', answer: 2, choices: [2, 1, 3, 4] },
-  ]
+  
+  questions = [];
+
+  const operators = ['+','-'];
+
+  for(let i = 0; i < 10; ++i) {
+    const left = Math.floor(Math.random() * 10);
+    const right = Math.floor(Math.random() * 10);
+    const operator = operators[Math.floor(Math.random() * operators.length)];
+    const text = `${left} ${operator} ${right}`;
+    const answer = eval(text);
+    const choices = getChoices(answer);
+    questions.push({text, answer, choices});
+  }
+}
+
+function getChoices(answer) {
+  const choices = [answer];
+   
+  for(let i = 0; i < 3; ++i) {
+    let decoy = answer;
+
+    while(choices.includes(decoy)) {
+      decoy = getDecoy(answer);
+    }
+
+    choices.push(decoy);
+  }
+
+  shuffle(choices);
+
+  return choices;
+}
+
+function shuffle(list) {
+  for(let i = 0; i < 20; ++i) {
+    const a = Math.floor(Math.random() * list.length);
+    const b = Math.floor(Math.random() * list.length);
+    const temp = list[a];
+    list[a] = list[b];
+    list[b] = temp;
+  }
+}
+
+function getDecoy(answer) {
+  let offset = 1 + Math.floor(Math.random() * 5);
+   
+  if(Math.random() > 0.5) {
+    offset *= -1;
+  }
+
+  return answer + offset;
 }
 
 function retrieveName() {
