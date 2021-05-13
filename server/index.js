@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import express from 'express';
-import { NameProvider, QuestionGenerator } from './helpers.js';
+import { NameProvider, QuestionGenerator, EventName, StateName } from './helpers.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -14,13 +14,13 @@ const io = new Server(httpServer, {
 });
 
 let questions;
-let state = 'wait';
+let state = StateName.WAIT;
 const players = {};
 const sockets = {};
 const nameProvider = new NameProvider();
 const questionGenerator = new QuestionGenerator();
 
-io.on('connection', socket => {
+io.on(EventName.CONNECTION, socket => {
   
   const player = {
     name: nameProvider.retrieveName(),
@@ -31,49 +31,49 @@ io.on('connection', socket => {
   players[socket.id] = player;
   sockets[socket.id] = socket;
   
-  socket.on('disconnect', () => {
+  socket.on(EventName.DISCONNECT, () => {
     const player = players[socket.id];
     delete players[socket.id];
     nameProvider.restoreName(player.name);
-    socket.broadcast.emit('left', {
+    socket.broadcast.emit(EventName.LEFT, {
       player
     });
   });
 
-  socket.on('choice', choice => {
+  socket.on(EventName.CHOICE, choice => {
     const question = questions[player.position];
 
     if(choice === question.answer) {
       player.position += 1;
 
       if(player.position === questions.length) {
-        state = 'wait';
-        socket.emit('winner', {
+        state = StateName.WAIT;
+        socket.emit(EventName.WINNER, {
           position: player.position,
         });
-        socket.broadcast.emit('loser', {
+        socket.broadcast.emit(EventName.LOSER, {
           winner: player,
           players,
         });
       } else {
-        socket.emit('correct', {
+        socket.emit(EventName.CORRECT, {
           question: questions[player.position],
           position: player.position,
         });
-        socket.broadcast.emit('update', {
+        socket.broadcast.emit(EventName.UPDATE, {
           player
         });
       }
 
     } else {
-      socket.emit('wrong');
+      socket.emit(EventName.WRONG);
     }
   });
 
-  socket.on('play', () => {
+  socket.on(EventName.PLAY, () => {
 
-    if(state === 'wait') {
-      state = 'play';
+    if(state === StateName.WAIT) {
+      state = StateName.PLAY;
       questions = questionGenerator.generateQuestions();
       
       Object.values(players).forEach(player => {
@@ -81,21 +81,21 @@ io.on('connection', socket => {
       });
 
       Object.values(players).forEach(player => {
-        sockets[player.id].emit('welcome', {
+        sockets[player.id].emit(EventName.WELCOME, {
           id: player.id,
           players,
           question: questions[player.position],
           questionCount: questions.length,
         });
       });
-    } else if(state === 'play') {
-      socket.emit('welcome', {
+    } else if(state === StateName.PLAY) {
+      socket.emit(EventName.WELCOME, {
         id: player.id,
         players,
         question: questions[player.position],
         questionCount: questions.length,
       });
-      socket.broadcast.emit('joined', {
+      socket.broadcast.emit(EventName.JOINED, {
         player
       });
     }

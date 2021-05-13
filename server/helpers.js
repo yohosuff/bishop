@@ -86,7 +86,29 @@ class QuestionGenerator {
   }
 }
 
+class EventName {
+  static get CONNECTION() { return 'connection'; }
+  static get DISCONNECT() { return 'disconnect'; }
+  static get CHOICE() { return 'choice'; }
+  static get WINNER() { return 'winner'; }
+  static get LOSER() { return 'loser'; }
+  static get CORRECT() { return 'correct'; }
+  static get UPDATE() { return 'update'; }
+  static get WRONG() { return 'wrong'; }
+  static get PLAY() { return 'play'; }
+  static get WELCOME() { return 'welcome'; }
+  static get JOINED() { return 'joined'; }
+  static get LEFT() { return 'left'; }
+}
+
+class StateName {
+  static get WAIT() { return 'wait'; }
+  static get PLAY() { return 'play'; }
+}
+
 export {
   NameProvider,
   QuestionGenerator,
+  EventName,
+  StateName,
 };
