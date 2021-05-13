@@ -2,7 +2,12 @@
     "name": "bishop",
     "type": "module",
     "version": "0.0.1",
+    "license": "MIT",
     "description": "a math game",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node ."
+    },
     "dependencies": {
         "express": "4",
         "socket.io": "^4.0.2"
