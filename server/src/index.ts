@@ -1,7 +1,10 @@
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import express from 'express';
-import { NameProvider, QuestionGenerator, EventName, StateName } from './helpers.js';
+import { NameProvider } from './name-provider';
+import { QuestionGenerator } from './question-generator';
+import { StateName } from './state-name';
+import { EventName } from './event-name';
 
 const app = express();
 const httpServer = createServer(app);
@@ -13,32 +16,32 @@ const io = new Server(httpServer, {
   }
 });
 
-let questions;
+let questions: any[];
 let state = StateName.WAIT;
-const players = {};
-const sockets = {};
+const players = new Map<string, any>();
+const sockets = new Map<string, any>();
 const nameProvider = new NameProvider();
 const questionGenerator = new QuestionGenerator();
 
-io.on(EventName.CONNECTION, socket => {
-  
+io.on('connection', socket => {
+
   const player = {
     name: nameProvider.retrieveName(),
     id: socket.id,
     position: 0,
   };
-  
-  players[socket.id] = player;
-  sockets[socket.id] = socket;
-  
+
+  players.set(socket.id, player);
+  sockets.set(socket.id, socket);
+
   socket.on(EventName.DISCONNECT, () => {
-    const player = players[socket.id];
-    delete players[socket.id];
-    nameProvider.restoreName(player.name);
-    socket.broadcast.emit(EventName.LEFT, {
-      player
+      const leaver = players.get(socket.id);
+      players.delete(leaver.id);
+      nameProvider.restoreName(leaver.name);
+      socket.broadcast.emit(EventName.LEFT, {
+        player: leaver
+      });
     });
-  });
 
   socket.on(EventName.CHOICE, choice => {
     const question = questions[player.position];
@@ -53,7 +56,7 @@ io.on(EventName.CONNECTION, socket => {
         });
         socket.broadcast.emit(EventName.LOSER, {
           winner: player,
-          players,
+          players: Array.from(players.values()),
         });
       } else {
         socket.emit(EventName.CORRECT, {
@@ -75,23 +78,23 @@ io.on(EventName.CONNECTION, socket => {
     if(state === StateName.WAIT) {
       state = StateName.PLAY;
       questions = questionGenerator.generateQuestions();
-      
-      Object.values(players).forEach(player => {
-        player.position = 0;
+
+      Array.from(players.values()).forEach(p => {
+        p.position = 0;
       });
 
-      Object.values(players).forEach(player => {
-        sockets[player.id].emit(EventName.WELCOME, {
-          id: player.id,
-          players,
-          question: questions[player.position],
+      Array.from(players.values()).forEach(p => {
+        sockets.get(p.id).emit(EventName.WELCOME, {
+          id: p.id,
+          players: Array.from(players.values()),
+          question: questions[p.position],
           questionCount: questions.length,
         });
       });
     } else if(state === StateName.PLAY) {
       socket.emit(EventName.WELCOME, {
         id: player.id,
-        players,
+        players: Array.from(players.values()),
         question: questions[player.position],
         questionCount: questions.length,
       });

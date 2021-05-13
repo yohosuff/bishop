@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { EventName } from '../../../server/src/event-name';
 
 @Component({
   selector: 'app-root',
@@ -9,84 +10,83 @@ import { io, Socket } from 'socket.io-client';
 export class AppComponent implements OnInit {
   
   socket: Socket;
-    
   me;
   question;
   questionCount;
   state; //wait, play, win, lose
   winner;
-  players;
-  playersIterable;
+  players: Map<string, any>;
+  playersIterable: any[];
 
-  constructor(private host: ElementRef) {}
+  constructor() {}
 
   ngOnInit() {
     this.state = 'wait';    
   }
 
   choose(choice) {
-    this.socket.emit('choice', choice);
+    this.socket.emit(EventName.CHOICE, choice);
   }
 
   play() {
     if(!this.socket) {
       this.socket = io('http://68.148.134.87:3000');
-    
-      this.socket.on('welcome', params => {
+
+      this.socket.on(EventName.WELCOME, params => {
         console.log('welcome', params);
-        this.players = params.players;
-        this.playersIterable = Object.values(params.players);
-        this.me = this.players[params.id];
+        this.players = (params.players as any[]).reduce((p,c) => p.set(c.id, c), new Map<string, any>());
+        this.playersIterable = params.players;
+        this.me = this.players.get(params.id);
         this.question = params.question;
         this.questionCount = params.questionCount;
         this.state = 'play';
       });
 
-      this.socket.on('wrong', () => {
+      this.socket.on(EventName.WRONG, () => {
         console.log('wrong');
       });
 
-      this.socket.on('correct', params => {
+      this.socket.on(EventName.CORRECT, params => {
         console.log('correct', params);
         this.question = params.question;
         this.me.position = params.position;
       });
 
-      this.socket.on('update', params => {
+      this.socket.on(EventName.UPDATE, params => {
         console.log('update', params);
-        const player = this.players[params.player.id];
+        const player = this.players.get(params.player.id);
         player.position = params.player.position;
       });
 
-      this.socket.on('winner', params => {
+      this.socket.on(EventName.WINNER, params => {
         console.log('winner');
         this.me.position = params.position;
         this.state = 'win';
       });
 
-      this.socket.on('loser', params => {
+      this.socket.on(EventName.LOSER, params => {
         console.log('loser');
         this.winner = params.winner;
-        Object.values(params.players).forEach((player: any) => {
-          this.players[player.id].position = player.position;
+        Array.from(params.players.values()).forEach((player: any) => {
+          this.players.get(player.id).position = player.position;
         });
         this.state = 'lose';
       });
 
-      this.socket.on('joined', params => {
+      this.socket.on(EventName.JOINED, params => {
         console.log('joined', params);
-        this.players[params.player.id] = params.player;
-        this.playersIterable = Object.values(this.players);
+        this.players.set(params.player.id, params.player);
+        this.playersIterable = Array.from(this.players.values());
       });
 
-      this.socket.on('left', params => {
+      this.socket.on(EventName.LEFT, params => {
         console.log('left', params);
-        delete this.players[params.player.id];
-        this.playersIterable = Object.values(this.players);
+        this.players.delete(params.player.id);
+        this.playersIterable = Array.from(this.players.values());
       });
     }
 
-    this.socket.emit('play');
+    this.socket.emit(EventName.PLAY);
   }
 
 }
