@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { EventName } from '../../../server/src/event-name';
+import { StateName } from './state-name';
 
 @Component({
   selector: 'app-root',
@@ -13,15 +14,17 @@ export class AppComponent implements OnInit {
   me;
   question;
   questionCount;
-  state; //wait, play, win, lose
+  state: string;
   winner;
   players: Map<string, any>;
   playersIterable: any[];
 
+  StateName = StateName;
+
   constructor() {}
 
   ngOnInit() {
-    this.state = 'wait';    
+    this.state = StateName.WAIT;
   }
 
   choose(choice) {
@@ -39,7 +42,7 @@ export class AppComponent implements OnInit {
         this.me = this.players.get(params.id);
         this.question = params.question;
         this.questionCount = params.questionCount;
-        this.state = 'play';
+        this.state = StateName.PLAY;
       });
 
       this.socket.on(EventName.WRONG, () => {
@@ -61,7 +64,7 @@ export class AppComponent implements OnInit {
       this.socket.on(EventName.WINNER, params => {
         console.log('winner');
         this.me.position = params.position;
-        this.state = 'win';
+        this.state = StateName.WIN;
       });
 
       this.socket.on(EventName.LOSER, params => {
@@ -70,7 +73,7 @@ export class AppComponent implements OnInit {
         Array.from(params.players.values()).forEach((player: any) => {
           this.players.get(player.id).position = player.position;
         });
-        this.state = 'lose';
+        this.state = StateName.LOSE;
       });
 
       this.socket.on(EventName.JOINED, params => {
