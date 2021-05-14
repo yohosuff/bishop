@@ -1,11 +1,15 @@
 <div class="app">
-    <div>
-        <div *ngFor="let player of players" class="player-score">
-            <div class="score-container">
-                <div class="score" [style.width]="(player.position / questionCount * 100)+'%'"></div>
-            </div>
-            <span class="name">{{player.name}} <span *ngIf="player === me"> &#8592; you</span></span>
-        </div>
+    
+    <div class="race-track-container" *ngIf="state !== StateName.WAIT">
+        <div class="race-track"></div>
+        <div class="left-end-point"></div>
+        <div class="right-end-point"></div>
+        <div
+            *ngFor="let player of players"
+            [ngStyle]="{'left': 'calc(3px + '+(player.position / questionCount * 100)+'%)'}" 
+            class="player"
+        ></div>
+
     </div>
 
     <div class="divider"></div>

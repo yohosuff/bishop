@@ -66,3 +66,54 @@
     align-items: center;
     margin-top: 5px;
 }
+
+/* RACE TRACK */
+
+.race-track-container {
+    position: relative;
+    display: flex;
+    height: 20px;
+    width: 600px;
+}
+
+.race-track {
+    position: absolute;
+    border-bottom: 1px solid white;
+    box-sizing: border-box;
+    width: 100%;
+    top: 10px;
+    left: 10px;
+}
+
+.left-end-point {
+    position: absolute;
+    border: 1px solid white;
+    background-color: black;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    left: 0;
+}
+
+.right-end-point {
+    position: absolute;
+    border: 1px solid white;
+    background-color: black;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    left: 100%;
+}
+
+.player {
+    position: absolute;
+    border: 1px solid white;
+    background-color: white;
+    width: 14px;
+    height: 14px;
+    border-radius: 14px;
+    box-sizing: border-box;
+    top: 3px;
+}
