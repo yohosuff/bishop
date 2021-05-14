@@ -44,12 +44,12 @@
 .score-container {
     border: 1px solid white;
     width: 500px;
-    height: 50px;
+    height: 20px;
 }
 
 .score {
     background-color: white;
-    height: 50px;
+    height: 100%;
 }
 
 .play-again-button {
