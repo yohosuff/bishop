@@ -13,7 +13,7 @@ export class NameProvider {
     'Chotek',
     'Smythe',
     'Frey',
-    'Frielander',
+    'Friedlander',
     'Steel',
     'Kapoor',
   ];
