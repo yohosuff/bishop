@@ -4,12 +4,13 @@
         <div class="race-track"></div>
         <div class="left-end-point"></div>
         <div class="right-end-point"></div>
-        <div
-            *ngFor="let player of players"
-            [ngStyle]="{'left': 'calc(3px + '+(player.position / questionCount * 100)+'%)'}" 
-            class="player"
-        ></div>
-
+        <div *ngFor="let player of players"[ngStyle]="{'left': 'calc(3px + ' + (player.position / questionCount * 100) + '%)'}" class="player">
+            <div class="you-marker" *ngIf="player === me">
+                <div>YOU</div>
+                <div>&darr;</div>
+            </div>
+            <div class="player-name">{{player.name}}</div>
+        </div>
     </div>
 
     <div class="divider"></div>
