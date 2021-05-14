@@ -1,10 +1,10 @@
 <div class="app">
     <div>
-        <div *ngFor="let player of playersIterable" class="player-score">
+        <div *ngFor="let player of players" class="player-score">
             <div class="score-container">
                 <div class="score" [style.width]="(player.position / questionCount * 100)+'%'"></div>
             </div>
-            <span class="name">{{player.name}} <span *ngIf="player === me"> (you)</span></span>
+            <span class="name">{{player.name}} <span *ngIf="player === me"> &#8592; you</span></span>
         </div>
     </div>
 
