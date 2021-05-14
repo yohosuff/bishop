@@ -8,6 +8,14 @@ export class NameProvider {
     'Simms',
     'Perkins',
     'Dandurff',
+    'Nagatha',
+    'Bilby',
+    'Chotek',
+    'Smythe',
+    'Frey',
+    'Frielander',
+    'Steel',
+    'Kapoor',
   ];
 
   retrieveName() {
