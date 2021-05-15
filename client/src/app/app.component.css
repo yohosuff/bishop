@@ -92,14 +92,16 @@
 }
 
 .player-name {
-    font-size: 20px;
+    font-size: 15px;
+    font-family: "Arial Narrow", Arial, sans-serif;
     position: absolute;
-    top: -35px;
+    top: -30px;
     white-space: nowrap;
 }
 
 .you-marker {
     font-size: 20px;
+    font-family: "Arial Narrow", Arial, sans-serif;
     position: absolute;
     top: -85px;
     display: flex;
