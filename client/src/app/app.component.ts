@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { EventName } from '../../../server/src/event-name';
 import { StateName } from './state-name';
@@ -18,10 +18,11 @@ export class AppComponent implements OnInit {
   winner;
   playersMap: Map<string, any>;
   players: any[];
+  playerGroups: { position: number; players: any[]; }[];
 
   StateName = StateName;
 
-  constructor(private host: ElementRef) {}
+  constructor() {}
 
   @HostListener('document:keypress', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
         id: name,
         position: 0,
       });
+      this.updatePlayerGroups();
     }
   }
 
@@ -58,7 +60,8 @@ export class AppComponent implements OnInit {
     socket.on(EventName.WELCOME, params => {
       console.log('welcome', params);
       this.players = params.players;
-      this.playersMap = params.players.reduce((p, c) => p.set(c.id, c), new Map<string, any>());
+      this.playersMap = params.players.reduce((map, player) => map.set(player.id, player), new Map<string, any>());
+      this.updatePlayerGroups();
       this.me = this.playersMap.get(params.id);
       this.question = params.question;
       this.questionCount = params.questionCount;
@@ -73,38 +76,44 @@ export class AppComponent implements OnInit {
       console.log('correct', params);
       this.question = params.question;
       this.me.position = params.position;
+      this.updatePlayerGroups();
     });
 
     socket.on(EventName.UPDATE, params => {
       console.log('update', params);
       const player = this.playersMap.get(params.player.id);
       player.position = params.player.position;
+      this.updatePlayerGroups();
     });
 
     socket.on(EventName.WINNER, params => {
       console.log('winner');
       this.me.position = params.position;
+      this.updatePlayerGroups();
       this.state = StateName.WIN;
     });
 
     socket.on(EventName.LOSER, params => {
       console.log('loser');
       this.winner = params.winner;
-      Array.from(params.players.values()).forEach((player: any) => {
+      params.players.forEach((player: any) => {
         this.playersMap.get(player.id).position = player.position;
       });
+      this.updatePlayerGroups();
       this.state = StateName.LOSE;
     });
 
     socket.on(EventName.JOINED, params => {
       console.log('joined', params);
       this.addPlayer(params.player);
+      this.updatePlayerGroups();
     });
 
     socket.on(EventName.LEFT, params => {
       console.log('left', params);
       this.playersMap.delete(params.player.id);
       this.players = Array.from(this.playersMap.values());
+      this.updatePlayerGroups();
     });
 
     return socket;
@@ -113,6 +122,23 @@ export class AppComponent implements OnInit {
   addPlayer(player) {
     this.playersMap.set(player.id, player);
     this.players = Array.from(this.playersMap.values());
+  }
+
+  updatePlayerGroups() {
+    const groups: Map<number, any[]> = this.players.reduce((groups: Map<number, any[]>, player) => {
+      if(!groups.has(player.position)) {
+        groups.set(player.position, []);
+      }
+      groups.get(player.position).push(player);
+      return groups;
+    }, new Map<number, any[]>());
+
+    this.playerGroups = Array.from(groups.entries()).map(entry => {
+      return {
+        position: entry[0],
+        players: entry[1],
+      };
+    });
   }
 
 }

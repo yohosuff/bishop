@@ -94,13 +94,14 @@
 .player-name {
     font-size: 20px;
     position: absolute;
-    top: -30px;
+    top: -35px;
+    white-space: nowrap;
 }
 
 .you-marker {
     font-size: 20px;
     position: absolute;
-    top: -80px;
+    top: -85px;
     display: flex;
     flex-direction: column;
     align-items: center;
