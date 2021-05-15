@@ -6,25 +6,25 @@
         <div class="right-end-point"></div>
         <div class="player" *ngFor="let group of playerGroups" [ngStyle]="{'left': 'calc(3px + ' + (group.position / questionCount * 100) + '%)'}">
             <div class="you-marker" *ngIf="group.position === me.position">
-                <div>YOU</div>
-                <div>&darr;</div>
+                <div>&uarr;</div>
+                <div style="margin-top: 5px;">YOU</div>
             </div>
             <div class="player-name" *ngIf="group.players.length === 1">{{group.players[0].name}}</div>
-            <div class="player-name" *ngIf="group.players.length > 1">{{group.players.length}} 🧠</div>
+            <div class="player-name" *ngIf="group.players.length > 1">{{group.players.length}} players</div>
         </div>
     </div>
 
-    <div class="divider"></div>
+    <div style="height: 100px; width: 100%;"></div>
 
     <div *ngIf="state === StateName.PLAY">{{question?.text}}</div>
     <div *ngIf="state === StateName.WIN">You won!</div>
     <div *ngIf="state === StateName.LOSE">You lost...</div>
 
-    <div class="divider"></div>
+    <div style="height: 50px; width: 100%;"></div>
     
     <div class="choices-container" *ngIf="state === StateName.PLAY">
-        <div *ngFor="let choice of question?.choices">
-            <div class="button choice-button" (click)="choose(choice)">{{choice}}</div>
+        <div *ngFor="let choice of question?.choices" class="button choice-button" (click)="choose(choice)">
+            {{choice}}
         </div>
     </div>
     <div class="button play-button" *ngIf="state !== StateName.PLAY" (click)="play()"> Play </div>

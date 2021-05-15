@@ -7,14 +7,11 @@
     flex-direction: column;
 }
 
-.divider {
-    height: 100px;
-}
-
 .choices-container {
     display: flex;
     justify-content: space-between;
-    width: 700px;
+    flex-wrap: wrap;
+    width: 312px;
 }
 
 .button {
@@ -31,6 +28,7 @@
 
 .choice-button {
     width: 150px;
+    margin-top: 10px;
 }
 
 .play-button {
@@ -43,7 +41,8 @@
     position: relative;
     display: flex;
     height: 20px;
-    width: 600px;
+    width: 360px;
+    left: -10px;
 }
 
 .race-track {
@@ -95,15 +94,18 @@
     font-size: 15px;
     font-family: "Arial Narrow", Arial, sans-serif;
     position: absolute;
-    top: -30px;
+    top: -20px;
+    left: 5px;
     white-space: nowrap;
+    transform: rotate(-90deg);
+    transform-origin: 0 50%;
 }
 
 .you-marker {
     font-size: 20px;
     font-family: "Arial Narrow", Arial, sans-serif;
     position: absolute;
-    top: -85px;
+    top: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
