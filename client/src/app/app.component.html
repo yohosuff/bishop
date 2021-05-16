@@ -22,7 +22,7 @@
     
     <div class="choices-container" *ngIf="state === StateName.PLAY">
         <div class="button choice-button" *ngFor="let choice of question?.choices" (click)="choose(choice)">
-            {{choice}}
+            <div> {{choice}} </div>
         </div>
     </div>
     <div class="button play-button" *ngIf="state !== StateName.PLAY" (click)="play()">
