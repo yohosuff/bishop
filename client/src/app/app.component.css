@@ -1,10 +1,8 @@
 .app {
-    height: 100vh;
-    font-size: 100px;
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
+    user-select: none;
 }
 
 .choices-container {
@@ -12,13 +10,13 @@
     justify-content: space-between;
     flex-wrap: wrap;
     width: 312px;
+    margin-top: 50px;
 }
 
 .button {
     border: 1px solid white;
     text-align: center;
     cursor: pointer;
-    user-select: none;
 }
 
 .button:hover {
@@ -29,10 +27,18 @@
 .choice-button {
     width: 150px;
     margin-top: 10px;
+    font-size: 50px;
 }
 
 .play-button {
     padding: 0 20px;
+    margin-top: 50px;
+    font-size: 50px;
+}
+
+.main-display {
+    margin-top: 100px;
+    font-size: 50px;
 }
 
 /* RACE TRACK */
@@ -43,6 +49,7 @@
     height: 20px;
     width: 85vw;
     left: -10px;
+    margin-top: 100px;
 }
 
 .race-track {
