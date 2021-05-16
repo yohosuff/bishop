@@ -19,9 +19,10 @@ export class AppComponent implements OnInit {
   playersMap: Map<string, any>;
   players: any[];
   playerGroups: { position: number; players: any[]; }[];
+  showPlayButton = true;
 
   StateName = StateName;
-
+  
   constructor() {}
 
   @HostListener('document:keypress', ['$event'])
@@ -91,6 +92,7 @@ export class AppComponent implements OnInit {
       this.me.position = params.position;
       this.updatePlayerGroups();
       this.state = StateName.WIN;
+      this.allowVictoryDance();
     });
 
     socket.on(EventName.LOSER, params => {
@@ -101,6 +103,7 @@ export class AppComponent implements OnInit {
       });
       this.updatePlayerGroups();
       this.state = StateName.LOSE;
+      this.allowVictoryDance();
     });
 
     socket.on(EventName.JOINED, params => {
@@ -117,6 +120,11 @@ export class AppComponent implements OnInit {
     });
 
     return socket;
+  }
+
+  allowVictoryDance() {
+    this.showPlayButton = false;
+    setTimeout(() => this.showPlayButton = true, 2000);
   }
 
   addPlayer(player) {

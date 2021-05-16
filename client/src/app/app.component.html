@@ -16,8 +16,12 @@
 
     <div class="main-display" *ngIf="state !== StateName.WAIT">
         <div *ngIf="state === StateName.PLAY">{{question?.text}}</div>
-        <div *ngIf="state === StateName.WIN">You won!</div>
-        <div *ngIf="state === StateName.LOSE">You lost...</div>
+        <div *ngIf="state === StateName.WIN">
+            <img class="result-image" src="/assets/win.jpg">
+        </div>
+        <div *ngIf="state === StateName.LOSE">
+            <img class="result-image" src="/assets/lose.jpg">
+        </div>
     </div>
     
     <div class="choices-container" *ngIf="state === StateName.PLAY">
@@ -25,8 +29,8 @@
             <div> {{choice}} </div>
         </div>
     </div>
-    <div class="button play-button" *ngIf="state !== StateName.PLAY" (click)="play()">
-        PLAY
+    <div class="button play-button" *ngIf="state !== StateName.PLAY && showPlayButton" (click)="play()">
+        PLAY <span *ngIf="state !== StateName.WAIT">AGAIN</span>
     </div>
     
 </div>
