@@ -19,9 +19,11 @@
     cursor: pointer;
 }
 
-.button:hover {
-    background-color: white;
-    color: black;
+@media (hover: hover) {
+    .button:hover {
+        background-color: white;
+        color: black;
+    }
 }
 
 .choice-button {
