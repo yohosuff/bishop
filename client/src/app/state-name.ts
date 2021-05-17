@@ -4,4 +4,5 @@ export class StateName {
   static readonly PLAY = 'play';
   static readonly WIN = 'win';
   static readonly LOSE = 'lose';
+  static readonly WRONG = 'wrong';
 }

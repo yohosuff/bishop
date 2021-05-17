@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { EventName } from '../../../server/src/event-name';
 import { StateName } from './state-name';
@@ -24,20 +24,6 @@ export class AppComponent implements OnInit {
   StateName = StateName;
   
   constructor() {}
-
-  @HostListener('document:keypress', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    console.log(event);
-    if(event.code === 'Numpad1') {
-      const name = `player${this.players.length + 1}`;
-      this.addPlayer({
-        name,
-        id: name,
-        position: 0,
-      });
-      this.updatePlayerGroups();
-    }
-  }
 
   ngOnInit() {
     this.state = StateName.WAIT;
@@ -71,6 +57,12 @@ export class AppComponent implements OnInit {
 
     socket.on(EventName.WRONG, () => {
       console.log('wrong');
+      this.state = this.state = StateName.WRONG;
+      setTimeout(() => {
+        if(this.state === StateName.WRONG) {
+          this.state = StateName.PLAY;
+        }
+      }, 1000);
     });
 
     socket.on(EventName.CORRECT, params => {
