@@ -5,9 +5,9 @@
         <div class="left-end-point"></div>
         <div class="right-end-point"></div>
         <div class="player" *ngFor="let group of playerGroups" [ngStyle]="{'left': 'calc(3px + ' + (group.position / questionCount * 100) + '%)'}">
-            <div class="you-marker" *ngIf="group.position === me.position">
+            <div class="you-marker-container" *ngIf="group.position === me.position">
                 <div>&uarr;</div>
-                <div style="margin-top: 5px;">YOU</div>
+                <div class="you-marker">YOU</div>
             </div>
             <div class="player-name" *ngIf="group.players.length === 1">{{group.players[0].name}}</div>
             <div class="player-name" *ngIf="group.players.length > 1">{{group.players.length}} players</div>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="main-display" *ngIf="state !== StateName.WAIT">
-        <div *ngIf="state === StateName.PLAY">{{question?.text}}</div>
+        <div *ngIf="state === StateName.PLAY">{{question.text}}</div>
         <div *ngIf="state === StateName.WIN">
             <img class="result-image" src="/assets/win.jpg">
         </div>
