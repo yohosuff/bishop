@@ -25,8 +25,17 @@
     </div>
     
     <div class="choices-container" *ngIf="state === StateName.PLAY">
-        <div class="button choice-button" *ngFor="let choice of question?.choices" (click)="choose(choice)">
-            <div> {{choice}} </div>
+        <div class="button choice-button choice-button-0" (click)="choose(question.choices[0])">
+            <div> {{question.choices[0]}} </div>
+        </div>
+        <div class="button choice-button choice-button-1" (click)="choose(question.choices[1])">
+            <div> {{question.choices[1]}} </div>
+        </div>
+        <div class="button choice-button choice-button-2" (click)="choose(question.choices[2])">
+            <div> {{question.choices[2]}} </div>
+        </div>
+        <div class="button choice-button choice-button-3" (click)="choose(question.choices[3])">
+            <div> {{question.choices[3]}} </div>
         </div>
     </div>
     <div class="button play-button" *ngIf="state !== StateName.PLAY && showPlayButton" (click)="play()">

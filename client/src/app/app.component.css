@@ -5,16 +5,9 @@
     user-select: none;
 }
 
-.choices-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    width: 312px;
-    margin-top: 60px;
-}
-
 .button {
     border: 1px solid white;
+    box-sizing: border-box;
     text-align: center;
     cursor: pointer;
 }
@@ -26,14 +19,41 @@
     }
 }
 
+.choices-container {
+    width: 200px;
+    height: 200px;
+    margin-top: 60px;
+    position: relative;
+}
+
 .choice-button {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 10px;
+    width: 48%;
+    height: 48%;
     font-size: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+}
+
+.choice-button-0 {
+    top: 0;
+    left: 0;
+}
+
+.choice-button-1 {
+    top: 0;
+    right: 0;
+}
+
+.choice-button-2 {
+    bottom: 0;
+    left: 0;
+}
+
+.choice-button-3 {
+    bottom: 0;
+    right: 0;
 }
 
 .play-button {
@@ -48,8 +68,8 @@
 }
 
 .result-image {
-    width: 90vw;
     max-width: 400px;
+    max-height: 200px;
 }
 
 /* RACE TRACK */
